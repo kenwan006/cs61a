@@ -21,12 +21,12 @@ def has_seven(k):
     True
     """
     "*** YOUR CODE HERE ***" 
-    if k < 10:
-    	if k == 7:
-    		return True
-    	else:
-    		return False 
-    return has_seven(k//10) or k % 7 == 0   #once find one 7 the result would be true
+    if k % 10 == 7:
+        return True
+    elif k < 10:
+        return False
+    else:
+        return has_seven(k//10) 
 
 def summation(n, term):
 
@@ -143,8 +143,10 @@ def filtered_accumulate(combiner, base, pred, n, term):
     """
     def combine_if(x, y):
         "*** YOUR CODE HERE ***"
-        if pred(term(n)):
+        if pred(y):
         	return combiner(x,y) 
+        else:
+            return x
 
     return accumulate(combine_if, base, n, term)
 
@@ -170,6 +172,18 @@ def make_repeater(f, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return lambda x: x
+    else:
+        return lambda x: f(make_repeater(f,n-1)(x))
+    
+
+# Verify_Ken
+# make_repeater(f,3)= lambda x: f(make_repeater(f,2)(x))
+# make_repeater(f,2)= lambda x: f(make_repeater(f,1)(x)) 
+# make_repeater(f,1)= lmabda x: f(make_repeater(f,0)(x)) = lambda x: f(x)
+
+
 
 def compose1(f, g):
     """Return a function h, such that h(x) = f(g(x))."""
@@ -181,9 +195,14 @@ def compose1(f, g):
 # Extra Questions #
 ###################
 
-quine = """
-"*** YOUR CODE HERE ***"
+
+quine =  lambda x: print(eval(repr(x)))
 """
+=======
+quine = """
+
+"*** YOUR CODE HERE ***"
+
 
 def zero(f):
     return lambda x: x
@@ -194,10 +213,12 @@ def successor(n):
 def one(f):
     """Church numeral 1: same as successor(zero)"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(x)
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(f(x))
 
 three = successor(two)
 
@@ -214,6 +235,8 @@ def church_to_int(n):
     3
     """
     "*** YOUR CODE HERE ***"
+    return n(increment)(0)
+
 
 def add_church(m, n):
     """Return the Church numeral for m + n, for Church numerals m and n.
@@ -222,6 +245,12 @@ def add_church(m, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    m, n = church_to_int(m), church_to_int(n)
+    k, i = zero, 0
+    while i < m+n:
+        k, i = successor(k), i + 1
+    return k
+
 
 def mul_church(m, n):
     """Return the Church numeral for m * n, for Church numerals m and n.
@@ -234,6 +263,12 @@ def mul_church(m, n):
     """
     "*** YOUR CODE HERE ***"
 
+    m, n = church_to_int(m), church_to_int(n)
+    k, i = zero, 0
+    while i < m*n:
+        k, i = successor(k), i + 1
+    return k
+
 def pow_church(m, n):
     """Return the Church numeral m ** n, for Church numerals m and n.
 
@@ -243,3 +278,11 @@ def pow_church(m, n):
     9
     """
     "*** YOUR CODE HERE ***"
+
+    m, n = church_to_int(m), church_to_int(n)
+    k, i = zero, 0
+    while i < m ** n:
+        k, i = successor(k), i + 1
+    return k
+
+
